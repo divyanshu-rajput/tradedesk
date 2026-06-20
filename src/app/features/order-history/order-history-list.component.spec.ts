@@ -3,21 +3,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 
 import { mockAppState } from '../../state/testing/mock-app-state';
-import ChartsComponent from './charts.component';
+import { OrderHistoryListComponent } from './order-history-list.component';
 
-describe('ChartsComponent', () => {
-  let fixture: ComponentFixture<ChartsComponent>;
+describe('OrderHistoryListComponent', () => {
+  let fixture: ComponentFixture<OrderHistoryListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChartsComponent],
+      imports: [OrderHistoryListComponent],
       providers: [
         provideZonelessChangeDetection(),
         provideMockStore({ initialState: mockAppState }),
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ChartsComponent);
+    fixture = TestBed.createComponent(OrderHistoryListComponent);
     fixture.detectChanges();
   });
 

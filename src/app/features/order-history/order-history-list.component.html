@@ -1,0 +1,21 @@
+<cdk-virtual-scroll-viewport itemSize="48" class="order-history-list__viewport">
+  <div *cdkVirtualFor="let order of orders(); trackBy: trackById" class="order-history-list__item">
+    <span class="order-history-list__time">{{ formatTime(order.createdAt) }}</span>
+    <span
+      class="order-history-list__side"
+      [class.order-history-list__side--buy]="order.side === 'buy'"
+    >
+      {{ order.side | uppercase }}
+    </span>
+    <span class="order-history-list__symbol">{{ formatSymbol(order.symbol) }}</span>
+    <span class="order-history-list__meta">
+      {{ order.type }} · qty {{ order.qty }}
+      @if (order.limitPrice) {
+        · limit {{ order.limitPrice }}
+      }
+      @if (order.stopPrice) {
+        · stop {{ order.stopPrice }}
+      }
+    </span>
+  </div>
+</cdk-virtual-scroll-viewport>

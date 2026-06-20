@@ -1,0 +1,13 @@
+.price-line-chart {
+  border: 1px solid #1e293b;
+  border-radius: 0.5rem;
+  background: #0f172a;
+  padding: 0.75rem;
+
+  &__svg {
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    display: block;
+  }
+}

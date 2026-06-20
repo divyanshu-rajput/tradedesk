@@ -20,3 +20,15 @@ test('shows order book depth for selected symbol', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Bids' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Asks' })).toBeVisible();
 });
+
+test('shows portfolio summary and holdings table', async ({ page }) => {
+  await page.goto('/portfolio');
+  await expect(page.getByRole('heading', { name: 'Portfolio' })).toBeVisible();
+  await expect(page.getByRole('columnheader', { name: 'P&L' })).toBeVisible();
+});
+
+test('shows virtualized order history', async ({ page }) => {
+  await page.goto('/order-history');
+  await expect(page.getByRole('heading', { name: 'Order History' })).toBeVisible();
+  await expect(page.getByText(/1,?000 orders/)).toBeVisible();
+});

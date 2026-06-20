@@ -35,4 +35,15 @@ export const ordersReducer = createReducer(
     submitting: false,
     lastError: error,
   })),
+  on(OrdersActions.historySeeded, (state, { orders }) => {
+    const entities = { ...state.entities };
+    const ids = [...state.ids];
+
+    for (const order of orders) {
+      entities[order.id] = order;
+      ids.push(order.id);
+    }
+
+    return { ...state, entities, ids };
+  }),
 );

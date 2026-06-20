@@ -76,8 +76,8 @@ npm run format       # Prettier
 
 ## Project Status
 
-**Phase 3 complete** — order placement form with conditional validator, optimistic orders, order book depth.
-Next: **Phase 4** — Portfolio + Charts + Order History.
+**Phase 4 complete** — portfolio with live P&L + D3 pie, charts line history, order history virtual scroll.
+Next: **Phase 5** — Firebase Auth + Firestore persistence.
 
 ## Disclaimer
 

@@ -9,5 +9,6 @@ export const OrdersActions = createActionGroup({
     'Order Placed': props<{ order: Order }>(),
     'Order Failed': props<{ error: string }>(),
     'Load Orders': emptyProps(),
+    'History Seeded': props<{ orders: Order[] }>(),
   },
 });

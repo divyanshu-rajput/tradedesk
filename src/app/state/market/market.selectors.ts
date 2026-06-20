@@ -67,3 +67,21 @@ export const selectActiveDepth = createSelector(
   selectMarketState,
   (state) => state.depth[state.selectedSymbol],
 );
+
+const priceHistorySelectorCache = new Map<string, MemoizedSelector<AppState, number[]>>();
+
+export const selectPriceHistoryForSymbol = (
+  symbol: string,
+): MemoizedSelector<AppState, number[]> => {
+  const cached = priceHistorySelectorCache.get(symbol);
+  if (cached) {
+    return cached;
+  }
+
+  const selector = createSelector(
+    selectMarketState,
+    (state): number[] => state.priceHistory[symbol] ?? [],
+  );
+  priceHistorySelectorCache.set(symbol, selector);
+  return selector;
+};

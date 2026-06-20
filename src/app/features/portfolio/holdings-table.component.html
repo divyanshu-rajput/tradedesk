@@ -1,0 +1,40 @@
+<div class="holdings-table">
+  <table class="holdings-table__table">
+    <thead class="holdings-table__head">
+      <tr class="holdings-table__row">
+        <th class="holdings-table__cell holdings-table__cell--head">Symbol</th>
+        <th class="holdings-table__cell holdings-table__cell--head">Qty</th>
+        <th class="holdings-table__cell holdings-table__cell--head">Avg cost</th>
+        <th class="holdings-table__cell holdings-table__cell--head">Price</th>
+        <th class="holdings-table__cell holdings-table__cell--head">Value</th>
+        <th class="holdings-table__cell holdings-table__cell--head">P&amp;L</th>
+      </tr>
+    </thead>
+    <tbody class="holdings-table__body">
+      @for (holding of holdings(); track holding.symbol) {
+        <tr class="holdings-table__row">
+          <td class="holdings-table__cell holdings-table__cell--symbol">
+            {{ formatSymbol(holding.symbol) }}
+          </td>
+          <td class="holdings-table__cell">{{ holding.qty }}</td>
+          <td class="holdings-table__cell">${{ formatPrice(holding.avgCost) }}</td>
+          <td class="holdings-table__cell">${{ formatPrice(holding.currentPrice) }}</td>
+          <td class="holdings-table__cell">${{ formatMoney(holding.marketValue) }}</td>
+          <td
+            class="holdings-table__cell holdings-table__cell--pnl"
+            [class.holdings-table__cell--up]="holding.pnl >= 0"
+            [class.holdings-table__cell--down]="holding.pnl < 0"
+          >
+            ${{ formatMoney(holding.pnl) }} ({{ formatPct(holding.pnlPct) }})
+          </td>
+        </tr>
+      } @empty {
+        <tr class="holdings-table__row">
+          <td class="holdings-table__cell holdings-table__cell--empty" colspan="6">
+            No holdings loaded.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

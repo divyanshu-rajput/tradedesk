@@ -1,0 +1,8 @@
+<figure class="allocation-chart">
+  <svg #chartRoot class="allocation-chart__svg" role="img" aria-label="Portfolio allocation"></svg>
+  <figcaption class="allocation-chart__legend">
+    @for (slice of data(); track slice.symbol) {
+      <span class="allocation-chart__legend-item">{{ slice.label }}</span>
+    }
+  </figcaption>
+</figure>
