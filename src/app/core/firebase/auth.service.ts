@@ -3,14 +3,18 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import {
   Auth,
   authState,
+  browserSessionPersistence,
   getRedirectResult,
   GoogleAuthProvider,
+  setPersistence,
   signInAnonymously,
   signInWithRedirect,
   signOut,
   type User,
 } from '@angular/fire/auth';
 import { filter, firstValueFrom, take } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -59,6 +63,10 @@ export class AuthService {
   async signInAsGuest(): Promise<User> {
     if (this.auth.currentUser) {
       return this.auth.currentUser;
+    }
+
+    if (environment.useEmulators) {
+      await setPersistence(this.auth, browserSessionPersistence);
     }
 
     const credential = await signInAnonymously(this.auth);

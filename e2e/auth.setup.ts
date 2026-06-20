@@ -1,10 +1,16 @@
 import { expect, test as setup } from '@playwright/test';
 
 const authFile = 'e2e/.auth/user.json';
-const bootTimeout = 120_000;
+const bootTimeout = 60_000;
 
 setup('authenticate as guest', async ({ page }) => {
-  await page.goto('/login', { waitUntil: 'domcontentloaded' });
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      console.error(`[browser] ${msg.text()}`);
+    }
+  });
+
+  await page.goto('/login', { waitUntil: 'load' });
 
   await expect(page.getByRole('heading', { name: 'Welcome to TradeDesk' })).toBeVisible({
     timeout: bootTimeout,

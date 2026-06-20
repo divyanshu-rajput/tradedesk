@@ -1,14 +1,7 @@
 import { EnvironmentProviders, inject, provideAppInitializer } from '@angular/core';
 import { Router } from '@angular/router';
 import { FirebaseApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import {
-  Auth,
-  browserSessionPersistence,
-  connectAuthEmulator,
-  getAuth,
-  provideAuth,
-  setPersistence,
-} from '@angular/fire/auth';
+import { Auth, connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
 import {
   connectFirestoreEmulator,
   Firestore,
@@ -45,10 +38,9 @@ export function provideFirebaseProviders(): EnvironmentProviders[] {
     provideAuth(() => createAuth()),
     provideFirestore((injector) => createFirestore(injector.get(FirebaseApp))),
     provideAppInitializer(async () => {
-      const auth = inject(Auth);
-
+      // Emulator E2E: never block bootstrap on async Auth calls (they can hang in CI).
       if (environment.useEmulators) {
-        await setPersistence(auth, browserSessionPersistence);
+        return;
       }
 
       const authService = inject(AuthService);

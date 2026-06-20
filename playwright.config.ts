@@ -1,8 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-// Pre-built static app + emulators — avoids ng serve compile race in CI.
 const ciWebServerCommand =
-  'firebase emulators:exec --only auth,firestore "npx serve -s dist/tradedesk/browser -l 4200"';
+  'firebase emulators:start --only auth,firestore,hosting --project tradedesk-e1956';
 
 export default defineConfig({
   testDir: './e2e',
