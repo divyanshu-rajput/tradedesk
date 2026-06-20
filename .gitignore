@@ -57,6 +57,7 @@ service-account*.json
 /playwright-report/
 /test-results/
 /blob-report/
+/e2e/.auth/
 
 # Husky
 .husky/_

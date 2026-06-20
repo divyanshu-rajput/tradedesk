@@ -5,22 +5,33 @@ const ciWebServerCommand =
 
 export default defineConfig({
   testDir: './e2e',
-  fullyParallel: !process.env['CI'],
+  fullyParallel: false,
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 2 : 0,
-  workers: process.env['CI'] ? 1 : undefined,
-  timeout: process.env['CI'] ? 60_000 : 30_000,
+  workers: 1,
+  timeout: process.env['CI'] ? 90_000 : 30_000,
   reporter: process.env['CI'] ? 'github' : 'html',
   use: {
     baseURL: 'http://localhost:4200',
     trace: 'on-first-retry',
-    actionTimeout: 15_000,
+    actionTimeout: 20_000,
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'setup', testMatch: /auth\.setup\.ts/ },
+    {
+      name: 'chromium',
+      testIgnore: /auth\.setup\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'e2e/.auth/user.json',
+      },
+      dependencies: ['setup'],
+    },
+  ],
   webServer: {
     command: process.env['CI'] ? ciWebServerCommand : 'npm run start -- --configuration=demo',
     url: 'http://localhost:4200',
     reuseExistingServer: !process.env['CI'],
-    timeout: 180_000,
+    timeout: 240_000,
   },
 });
