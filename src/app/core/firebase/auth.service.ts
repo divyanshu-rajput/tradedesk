@@ -5,7 +5,6 @@ import {
   authState,
   getRedirectResult,
   GoogleAuthProvider,
-  linkWithRedirect,
   signInAnonymously,
   signInWithRedirect,
   signOut,
@@ -77,9 +76,9 @@ export class AuthService {
     const provider = new GoogleAuthProvider();
     const current = this.auth.currentUser;
 
+    // Always use redirect (never popup/link). Sign out anonymous first so Google gets a clean redirect.
     if (current?.isAnonymous) {
-      await linkWithRedirect(current, provider);
-      return;
+      await signOut(this.auth);
     }
 
     await signInWithRedirect(this.auth, provider);
