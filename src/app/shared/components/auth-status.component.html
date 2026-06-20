@@ -1,0 +1,16 @@
+<div class="auth-status">
+  <span class="auth-status__label">{{ label() }}</span>
+  @if (isAnonymous()) {
+    <button
+      class="auth-status__button"
+      type="button"
+      [disabled]="signingIn()"
+      (click)="upgradeWithGoogle()"
+    >
+      {{ signingIn() ? 'Connecting…' : 'Sign in with Google' }}
+    </button>
+  }
+  @if (error()) {
+    <span class="auth-status__error">{{ error() }}</span>
+  }
+</div>

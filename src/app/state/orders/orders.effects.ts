@@ -1,16 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { catchError, exhaustMap, ignoreElements, map } from 'rxjs/operators';
 
-import { generateSeedOrders } from '../../core/orders/seed-orders';
+import { OrdersRepository } from '../../core/firebase/orders.repository';
 import type { Order } from '../../shared/models/order.model';
 import { OrdersActions } from './orders.actions';
 
 @Injectable()
 export class OrdersEffects {
   private readonly actions$ = inject(Actions);
+  private readonly ordersRepo = inject(OrdersRepository);
 
-  /** Optimistic simulated order — persisted to Firestore in Phase 5. */
+  /** Optimistic order in store, then persist to Firestore. */
   placeOrder$ = createEffect(() =>
     this.actions$.pipe(
       ofType(OrdersActions.placeOrder),
@@ -26,11 +28,40 @@ export class OrdersEffects {
     ),
   );
 
-  /** Seed 1,000+ historical orders for virtual scroll demo. */
+  persistOrder$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(OrdersActions.orderPlaced),
+      exhaustMap(({ order }) =>
+        from(this.ordersRepo.placeOrder(order)).pipe(
+          ignoreElements(),
+          catchError((error: unknown) =>
+            of(
+              OrdersActions.orderFailed({
+                error: error instanceof Error ? error.message : 'Failed to persist order',
+                orderId: order.id,
+              }),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+
   loadOrders$ = createEffect(() =>
     this.actions$.pipe(
       ofType(OrdersActions.loadOrders),
-      map(() => OrdersActions.historySeeded({ orders: generateSeedOrders(1_000) })),
+      exhaustMap(() =>
+        from(this.ordersRepo.loadOrders()).pipe(
+          map((orders) => OrdersActions.ordersHydrated({ orders })),
+          catchError((error: unknown) =>
+            of(
+              OrdersActions.orderFailed({
+                error: error instanceof Error ? error.message : 'Failed to load orders',
+              }),
+            ),
+          ),
+        ),
+      ),
     ),
   );
 }

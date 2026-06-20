@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { OrdersActions } from '../../state/orders/orders.actions';
 import { selectAllOrders } from '../../state/orders/orders.selectors';
 import { OrderHistoryListComponent } from './order-history-list.component';
 
@@ -12,14 +11,8 @@ import { OrderHistoryListComponent } from './order-history-list.component';
   styleUrl: './order-history.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class OrderHistoryComponent implements OnInit {
+export default class OrderHistoryComponent {
   private readonly store = inject(Store);
 
   readonly orderCount = this.store.selectSignal(selectAllOrders);
-
-  ngOnInit(): void {
-    if (this.orderCount().length === 0) {
-      this.store.dispatch(OrdersActions.loadOrders());
-    }
-  }
 }

@@ -76,8 +76,8 @@ npm run format       # Prettier
 
 ## Project Status
 
-**Phase 4 complete** — portfolio with live P&L + D3 pie, charts line history, order history virtual scroll.
-Next: **Phase 5** — Firebase Auth + Firestore persistence.
+**Phase 5 complete** — Firebase Auth (anonymous + Google) and Firestore persistence for orders and portfolio.
+Next: **Phase 6** — CI/CD and Firebase Hosting deploy.
 
 ## Disclaimer
 

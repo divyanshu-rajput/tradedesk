@@ -18,3 +18,4 @@ export { uiReducer } from './ui/ui.reducer';
 export { MarketEffects } from './market/market.effects';
 export { OrdersEffects } from './orders/orders.effects';
 export { PortfolioEffects } from './portfolio/portfolio.effects';
+export { AuthEffects } from './auth/auth.effects';

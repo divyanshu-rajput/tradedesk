@@ -9,10 +9,12 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
+import { provideFirebaseProviders } from './core/firebase/firebase.providers';
 import { provideMarketFeed } from './core/market-data/market-feed.providers';
 import { provideDepthFeed } from './core/market-data/depth-feed.providers';
 import { routes } from './app.routes';
 import {
+  AuthEffects,
   MarketEffects,
   OrdersEffects,
   PortfolioEffects,
@@ -33,12 +35,13 @@ export const appConfig: ApplicationConfig = {
       portfolio: portfolioReducer,
       ui: uiReducer,
     }),
-    provideEffects([MarketEffects, OrdersEffects, PortfolioEffects]),
+    provideEffects([MarketEffects, OrdersEffects, PortfolioEffects, AuthEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),
       connectInZone: false,
     }),
+    ...provideFirebaseProviders(),
     provideMarketFeed(),
     provideDepthFeed(),
   ],

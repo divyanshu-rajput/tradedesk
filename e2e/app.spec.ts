@@ -30,5 +30,5 @@ test('shows portfolio summary and holdings table', async ({ page }) => {
 test('shows virtualized order history', async ({ page }) => {
   await page.goto('/order-history');
   await expect(page.getByRole('heading', { name: 'Order History' })).toBeVisible();
-  await expect(page.getByText(/1,?000 orders/)).toBeVisible();
+  await expect(page.getByText(/only visible rows render/)).toBeVisible();
 });

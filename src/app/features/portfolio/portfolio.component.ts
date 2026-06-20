@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '
 import { Store } from '@ngrx/store';
 
 import { MarketActions } from '../../state/market/market.actions';
-import { PortfolioActions } from '../../state/portfolio/portfolio.actions';
 import {
   selectAllocation,
   selectCash,
@@ -29,7 +28,6 @@ export default class PortfolioComponent implements OnInit {
   readonly allocation = this.store.selectSignal(selectAllocation);
 
   ngOnInit(): void {
-    this.store.dispatch(PortfolioActions.loadSnapshot());
     this.store.dispatch(MarketActions.connect());
 
     this.destroyRef.onDestroy(() => {

@@ -7,8 +7,8 @@ export const OrdersActions = createActionGroup({
   events: {
     'Place Order': props<{ order: Omit<Order, 'id' | 'status' | 'createdAt'> }>(),
     'Order Placed': props<{ order: Order }>(),
-    'Order Failed': props<{ error: string }>(),
+    'Order Failed': props<{ error: string; orderId?: string }>(),
     'Load Orders': emptyProps(),
-    'History Seeded': props<{ orders: Order[] }>(),
+    'Orders Hydrated': props<{ orders: Order[] }>(),
   },
 });

@@ -30,20 +30,28 @@ export const ordersReducer = createReducer(
     entities: { ...state.entities, [order.id]: order },
     ids: [order.id, ...state.ids],
   })),
-  on(OrdersActions.orderFailed, (state, { error }) => ({
-    ...state,
-    submitting: false,
-    lastError: error,
-  })),
-  on(OrdersActions.historySeeded, (state, { orders }) => {
-    const entities = { ...state.entities };
-    const ids = [...state.ids];
-
-    for (const order of orders) {
-      entities[order.id] = order;
-      ids.push(order.id);
+  on(OrdersActions.orderFailed, (state, { error, orderId }) => {
+    if (!orderId) {
+      return {
+        ...state,
+        submitting: false,
+        lastError: error,
+      };
     }
 
-    return { ...state, entities, ids };
+    const entities = { ...state.entities };
+    delete entities[orderId];
+    return {
+      ...state,
+      submitting: false,
+      lastError: error,
+      entities,
+      ids: state.ids.filter((id) => id !== orderId),
+    };
   }),
+  on(OrdersActions.ordersHydrated, (state, { orders }) => ({
+    ...state,
+    entities: Object.fromEntries(orders.map((order) => [order.id, order])),
+    ids: orders.map((order) => order.id),
+  })),
 );
