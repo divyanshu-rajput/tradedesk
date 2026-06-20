@@ -24,7 +24,7 @@ export class AuthStatusComponent {
     this.error.set(null);
 
     try {
-      await this.authService.startGoogleSignInRedirect(this.router.url);
+      await this.authService.signInWithGoogle(this.router.url);
     } catch (caught) {
       this.busy.set(false);
       this.error.set(caught instanceof Error ? caught.message : 'Google sign-in failed');

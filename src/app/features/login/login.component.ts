@@ -16,7 +16,7 @@ export default class LoginComponent {
   private readonly route = inject(ActivatedRoute);
 
   readonly signingIn = signal(false);
-  readonly error = signal<string | null>(null);
+  readonly error = signal<string | null>(this.consumeAuthError());
 
   async continueAsGuest(): Promise<void> {
     await this.authenticate(() => this.authService.signInAsGuest());
@@ -28,11 +28,19 @@ export default class LoginComponent {
 
     try {
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/market-watch';
-      await this.authService.startGoogleSignInRedirect(returnUrl);
+      await this.authService.signInWithGoogle(returnUrl);
     } catch (caught) {
       this.signingIn.set(false);
       this.error.set(caught instanceof Error ? caught.message : 'Sign-in failed');
     }
+  }
+
+  private consumeAuthError(): string | null {
+    const message = sessionStorage.getItem('tradedesk.auth-error');
+    if (message) {
+      sessionStorage.removeItem('tradedesk.auth-error');
+    }
+    return message;
   }
 
   private async authenticate(action: () => Promise<unknown>): Promise<void> {
