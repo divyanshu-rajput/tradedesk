@@ -14,6 +14,10 @@
           "changeDetection": "OnPush",
           "standalone": true,
           "type": "component"
+        },
+        "@schematics/angular:directive": {
+          "standalone": true,
+          "type": "directive"
         }
       },
       "root": "",
