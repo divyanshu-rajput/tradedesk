@@ -1,13 +1,12 @@
 import { test, expect, type Page } from '@playwright/test';
 
+/** Sign in as guest from the login page — reliable for CI with Firebase emulators. */
 async function enterApp(page: Page): Promise<void> {
-  await page.goto('/market-watch');
-
-  const guestButton = page.getByRole('button', { name: 'Continue as guest' });
-  if (await guestButton.isVisible()) {
-    await guestButton.click();
-    await expect(page.getByRole('heading', { name: 'Market Watch' })).toBeVisible();
-  }
+  await page.goto('/login');
+  await page.getByRole('button', { name: 'Continue as guest' }).click();
+  await expect(page.getByRole('heading', { name: 'Market Watch' })).toBeVisible({
+    timeout: 60_000,
+  });
 }
 
 test('redirects unauthenticated users to login', async ({ page }) => {
@@ -24,15 +23,18 @@ test('shows TradeDesk shell and Market Watch watchlist', async ({ page }) => {
 
 test('places a market order from Order Placement', async ({ page }) => {
   await enterApp(page);
-  await page.goto('/order-placement');
+  await page.getByRole('link', { name: 'Order Placement' }).click();
+  await expect(page.getByRole('heading', { name: 'Order Placement' })).toBeVisible();
   await page.getByRole('button', { name: 'Place order' }).click();
-  await expect(page.getByRole('heading', { name: 'Recent orders' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Recent orders' })).toBeVisible({
+    timeout: 15_000,
+  });
   await expect(page.getByText(/BUY BTC\/USDT/)).toBeVisible();
 });
 
 test('shows order book depth for selected symbol', async ({ page }) => {
   await enterApp(page);
-  await page.goto('/order-book');
+  await page.getByRole('link', { name: 'Order Book' }).click();
   await expect(page.getByRole('heading', { name: 'Order Book' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Bids' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Asks' })).toBeVisible();
@@ -40,14 +42,14 @@ test('shows order book depth for selected symbol', async ({ page }) => {
 
 test('shows portfolio summary and holdings table', async ({ page }) => {
   await enterApp(page);
-  await page.goto('/portfolio');
+  await page.getByRole('link', { name: 'Portfolio' }).click();
   await expect(page.getByRole('heading', { name: 'Portfolio' })).toBeVisible();
   await expect(page.getByRole('columnheader', { name: 'P&L' })).toBeVisible();
 });
 
 test('shows virtualized order history', async ({ page }) => {
   await enterApp(page);
-  await page.goto('/order-history');
+  await page.getByRole('link', { name: 'Order History' }).click();
   await expect(page.getByRole('heading', { name: 'Order History' })).toBeVisible();
   await expect(page.getByText(/only visible rows render/)).toBeVisible();
 });
