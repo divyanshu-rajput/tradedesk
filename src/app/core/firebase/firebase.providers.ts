@@ -13,6 +13,7 @@ import {
   connectFirestoreEmulator,
   getFirestore,
   initializeFirestore,
+  memoryLocalCache,
   persistentLocalCache,
   provideFirestore,
 } from '@angular/fire/firestore';
@@ -35,7 +36,9 @@ export function provideFirebaseProviders(): EnvironmentProviders[] {
     provideAuth(() => getAuth()),
     provideFirestore((injector) => {
       const app = injector.get(FirebaseApp);
-      return initializeFirestore(app, { localCache: persistentLocalCache() });
+      return initializeFirestore(app, {
+        localCache: environment.useEmulators ? memoryLocalCache() : persistentLocalCache(),
+      });
     }),
     provideAppInitializer(async () => {
       const app = inject(FirebaseApp);

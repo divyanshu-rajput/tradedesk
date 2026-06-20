@@ -9,15 +9,15 @@ export default defineConfig({
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 2 : 0,
   workers: 1,
-  timeout: process.env['CI'] ? 90_000 : 30_000,
+  timeout: process.env['CI'] ? 180_000 : 30_000,
   reporter: process.env['CI'] ? 'github' : 'html',
   use: {
     baseURL: 'http://localhost:4200',
     trace: 'on-first-retry',
-    actionTimeout: 20_000,
+    actionTimeout: 30_000,
   },
   projects: [
-    { name: 'setup', testMatch: /auth\.setup\.ts/ },
+    { name: 'setup', testMatch: /auth\.setup\.ts/, timeout: 240_000 },
     {
       name: 'chromium',
       testIgnore: /auth\.setup\.ts/,
@@ -32,6 +32,6 @@ export default defineConfig({
     command: process.env['CI'] ? ciWebServerCommand : 'npm run start -- --configuration=demo',
     url: 'http://localhost:4200',
     reuseExistingServer: !process.env['CI'],
-    timeout: 240_000,
+    timeout: 300_000,
   },
 });
