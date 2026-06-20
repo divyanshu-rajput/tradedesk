@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  feedMode: 'demo' as const,
+  feedMode: 'demo' as 'live' | 'demo',
   useEmulators: false,
   firebase: {
     apiKey: 'YOUR_API_KEY',

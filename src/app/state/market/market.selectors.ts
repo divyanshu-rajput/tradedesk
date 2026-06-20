@@ -1,6 +1,7 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { MemoizedSelector, createFeatureSelector, createSelector } from '@ngrx/store';
 
-import type { MarketState } from './market.reducer';
+import type { AppState } from '../index';
+import type { MarketState, SymbolTick } from './market.reducer';
 
 export const selectMarketState = createFeatureSelector<MarketState>('market');
 
@@ -14,9 +15,25 @@ export const selectSelectedSymbol = createSelector(
   (state) => state.selectedSymbol,
 );
 
-export const selectSymbolData = (symbol: string) =>
-  createSelector(selectMarketState, (state) => state.symbols[symbol]);
+/** Memoized per symbol — a BTC tick does not invalidate ETH's selector. */
+const symbolSelectorCache = new Map<string, MemoizedSelector<AppState, SymbolTick | undefined>>();
 
-export const selectAllSymbols = createSelector(selectMarketState, (state) =>
-  Object.keys(state.symbols),
+export const selectSymbolData = (
+  symbol: string,
+): MemoizedSelector<AppState, SymbolTick | undefined> => {
+  const cached = symbolSelectorCache.get(symbol);
+  if (cached) {
+    return cached;
+  }
+
+  const selector = createSelector(
+    selectMarketState,
+    (state): SymbolTick | undefined => state.symbols[symbol],
+  );
+  symbolSelectorCache.set(symbol, selector);
+  return selector;
+};
+
+export const selectWatchlistSymbols = createSelector(selectMarketState, (state) =>
+  Object.keys(state.symbols).sort(),
 );

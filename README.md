@@ -10,7 +10,7 @@ demonstrate the Angular skills that frontend interviews probe hardest: large-sca
 OnPush + memoized selectors), custom form validation, low-level DOM work via directives, and
 non-trivial data visualization (D3).
 
-> One-line pitch: *"A UI that doesn't fall over when 10 symbols push price ticks every second."*
+> One-line pitch: _"A UI that doesn't fall over when 10 symbols push price ticks every second."_
 
 ---
 
@@ -37,10 +37,16 @@ See [`docs/TECH-STACK.md`](docs/TECH-STACK.md) for the full list with rationale.
 # prerequisites: Node 20+ LTS, npm 10+
 npm install
 
-# run the app (zoneless dev server)
-npm start                 # http://localhost:4200
+# run the app — then open http://localhost:4200
+npm start
 
-# run with seeded demo data instead of live Binance WS
+# run tests
+npm test
+
+# production build
+npm run build
+
+# demo mode (seeded data, no live Binance WS)
 npm start -- --configuration=demo
 ```
 
@@ -58,20 +64,20 @@ npm run format       # Prettier
 
 ## Documentation
 
-| Doc | What's inside |
-| --- | --- |
-| [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md) | Scope, per-module acceptance criteria, risks, test plan, build order |
-| [`docs/TECH-STACK.md`](docs/TECH-STACK.md) | Every technology, why it was chosen, and the interview skill it proves |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Folder structure, state shape, data-flow diagrams, key patterns |
+| Doc                                                    | What's inside                                                            |
+| ------------------------------------------------------ | ------------------------------------------------------------------------ |
+| [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md)         | Scope, per-module acceptance criteria, risks, test plan, build order     |
+| [`docs/TECH-STACK.md`](docs/TECH-STACK.md)             | Every technology, why it was chosen, and the interview skill it proves   |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)         | Folder structure, state shape, data-flow diagrams, key patterns          |
 | [`docs/BACKEND-FIREBASE.md`](docs/BACKEND-FIREBASE.md) | Firebase Auth + Firestore data model, security rules, persistence policy |
-| [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | Firebase Hosting + GitHub Actions CI/CD + preview channels |
-| [`docs/RESUME.md`](docs/RESUME.md) | Polished resume bullets + interview talking-points cheat-sheet |
-| [`docs/PHASES.md`](docs/PHASES.md) | Implementation phases and manual setup steps |
+| [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)             | Firebase Hosting + GitHub Actions CI/CD + preview channels               |
+| [`docs/RESUME.md`](docs/RESUME.md)                     | Polished resume bullets + interview talking-points cheat-sheet           |
+| [`docs/PHASES.md`](docs/PHASES.md)                     | Implementation phases and manual setup steps                             |
 
 ## Project Status
 
-**Phase 1 complete** — Angular 20 scaffold, NgRx skeleton (4 slices), 6 lazy routes, Jest + Playwright tooling.
-Next: **Phase 2** — WebSocket feed + Market Watch.
+**Phase 2 complete** — live/demo market feed, Market Watch table, per-row updates, `priceFlash` directive.
+Next: **Phase 3** — Order Placement form + Order Book.
 
 ## Disclaimer
 

@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
 
-test('shows TradeDesk shell and navigates to Market Watch', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'TradeDesk' })).toBeVisible();
+test('shows TradeDesk shell and Market Watch watchlist', async ({ page }) => {
+  await page.goto('/market-watch');
   await expect(page.getByRole('heading', { name: 'Market Watch' })).toBeVisible();
+  await expect(page.getByRole('columnheader', { name: 'Symbol' })).toBeVisible();
+  await expect(page.getByText('BTC/USDT')).toBeVisible();
 });
 
 test('navigates to Order Placement', async ({ page }) => {

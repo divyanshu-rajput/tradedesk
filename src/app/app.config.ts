@@ -1,10 +1,15 @@
 import { isDevMode } from '@angular/core';
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
+import { provideMarketFeed } from './core/market-data/market-feed.providers';
 import { routes } from './app.routes';
 import {
   MarketEffects,
@@ -33,5 +38,6 @@ export const appConfig: ApplicationConfig = {
       logOnly: !isDevMode(),
       connectInZone: false,
     }),
+    provideMarketFeed(),
   ],
 };
