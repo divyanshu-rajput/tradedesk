@@ -1,5 +1,5 @@
 import { provideZonelessChangeDetection } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 jest.mock('./core/firebase/auth.service', () => {
@@ -10,26 +10,27 @@ jest.mock('./core/firebase/auth.service', () => {
 });
 
 import { AuthService } from './core/firebase/auth.service';
-import AppComponent from './app.component';
-import { routes } from './app.routes';
+import ShellComponent from './shell.component';
 
-describe('AppComponent', () => {
+describe('ShellComponent', () => {
+  let fixture: ComponentFixture<ShellComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
-      providers: [provideZonelessChangeDetection(), provideRouter(routes), AuthService],
+      imports: [ShellComponent],
+      providers: [provideZonelessChangeDetection(), provideRouter([]), AuthService],
     }).compileComponents();
+
+    fixture = TestBed.createComponent(ShellComponent);
+    fixture.detectChanges();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+  it('should create', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render the root router outlet', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
+  it('should render TradeDesk title', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('router-outlet')).toBeTruthy();
+    expect(compiled.querySelector('h1.shell__title')?.textContent).toContain('TradeDesk');
   });
 });

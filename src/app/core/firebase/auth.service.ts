@@ -13,6 +13,8 @@ import { filter, firstValueFrom, take } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private static readonly SESSION_KEY = 'tradedesk.app-session';
+
   private readonly auth = inject(Auth);
 
   readonly user = toSignal(authState(this.auth), { initialValue: null as User | null });
@@ -20,7 +22,7 @@ export class AuthService {
   readonly displayLabel = computed(() => {
     const user = this.user();
     if (!user) {
-      return 'Signing in…';
+      return 'Signed out';
     }
     if (user.isAnonymous) {
       return 'Guest session';
@@ -28,11 +30,21 @@ export class AuthService {
     return user.displayName ?? user.email ?? 'Signed in';
   });
 
-  constructor() {
-    void this.ensureSignedIn();
+  /** Resolves once Firebase emits the initial auth state (user or null). */
+  waitForAuthResolution(): Promise<User | null> {
+    return firstValueFrom(authState(this.auth).pipe(take(1)));
   }
 
-  async ensureSignedIn(): Promise<User> {
+  /** True after the user explicitly signed in on the login page this browser tab session. */
+  hasActiveAppSession(): boolean {
+    return sessionStorage.getItem(AuthService.SESSION_KEY) === '1';
+  }
+
+  markAppSessionActive(): void {
+    sessionStorage.setItem(AuthService.SESSION_KEY, '1');
+  }
+
+  async signInAsGuest(): Promise<User> {
     if (this.auth.currentUser) {
       return this.auth.currentUser;
     }

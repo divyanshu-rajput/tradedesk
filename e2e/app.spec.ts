@@ -1,13 +1,29 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+async function enterApp(page: Page): Promise<void> {
+  await page.goto('/market-watch');
+
+  const guestButton = page.getByRole('button', { name: 'Continue as guest' });
+  if (await guestButton.isVisible()) {
+    await guestButton.click();
+    await expect(page.getByRole('heading', { name: 'Market Watch' })).toBeVisible();
+  }
+}
+
+test('redirects unauthenticated users to login', async ({ page }) => {
+  await page.goto('/market-watch');
+  await expect(page.getByRole('heading', { name: 'Welcome to TradeDesk' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Sign in with Google' })).toBeVisible();
+});
 
 test('shows TradeDesk shell and Market Watch watchlist', async ({ page }) => {
-  await page.goto('/market-watch');
-  await expect(page.getByRole('heading', { name: 'Market Watch' })).toBeVisible();
+  await enterApp(page);
   await expect(page.getByRole('columnheader', { name: 'Symbol' })).toBeVisible();
   await expect(page.getByText('BTC/USDT')).toBeVisible();
 });
 
 test('places a market order from Order Placement', async ({ page }) => {
+  await enterApp(page);
   await page.goto('/order-placement');
   await page.getByRole('button', { name: 'Place order' }).click();
   await expect(page.getByRole('heading', { name: 'Recent orders' })).toBeVisible();
@@ -15,6 +31,7 @@ test('places a market order from Order Placement', async ({ page }) => {
 });
 
 test('shows order book depth for selected symbol', async ({ page }) => {
+  await enterApp(page);
   await page.goto('/order-book');
   await expect(page.getByRole('heading', { name: 'Order Book' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Bids' })).toBeVisible();
@@ -22,12 +39,14 @@ test('shows order book depth for selected symbol', async ({ page }) => {
 });
 
 test('shows portfolio summary and holdings table', async ({ page }) => {
+  await enterApp(page);
   await page.goto('/portfolio');
   await expect(page.getByRole('heading', { name: 'Portfolio' })).toBeVisible();
   await expect(page.getByRole('columnheader', { name: 'P&L' })).toBeVisible();
 });
 
 test('shows virtualized order history', async ({ page }) => {
+  await enterApp(page);
   await page.goto('/order-history');
   await expect(page.getByRole('heading', { name: 'Order History' })).toBeVisible();
   await expect(page.getByText(/only visible rows render/)).toBeVisible();
