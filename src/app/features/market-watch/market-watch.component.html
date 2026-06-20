@@ -1,0 +1,19 @@
+<section class="market-watch">
+  <header class="market-watch__header">
+    <div class="market-watch__intro">
+      <h1 class="market-watch__title">Market Watch</h1>
+      <p class="market-watch__hint">
+        Live prices for {{ symbolCount }} symbols — only the updated row re-renders.
+      </p>
+    </div>
+    <app-connection-status />
+  </header>
+
+  <app-watchlist-table />
+
+  @if (devMode) {
+    <p class="market-watch__dev-note">
+      Dev mode: render-count column visible per row (Angular DevTools / profiler).
+    </p>
+  }
+</section>

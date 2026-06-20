@@ -37,3 +37,33 @@ export const selectSymbolData = (
 export const selectWatchlistSymbols = createSelector(selectMarketState, (state) =>
   Object.keys(state.symbols).sort(),
 );
+
+const depthSelectorCache = new Map<
+  string,
+  MemoizedSelector<AppState, { bids: [number, number][]; asks: [number, number][] } | undefined>
+>();
+
+export const selectDepthForSymbol = (
+  symbol: string,
+): MemoizedSelector<
+  AppState,
+  { bids: [number, number][]; asks: [number, number][] } | undefined
+> => {
+  const cached = depthSelectorCache.get(symbol);
+  if (cached) {
+    return cached;
+  }
+
+  const selector = createSelector(
+    selectMarketState,
+    (state): { bids: [number, number][]; asks: [number, number][] } | undefined =>
+      state.depth[symbol],
+  );
+  depthSelectorCache.set(symbol, selector);
+  return selector;
+};
+
+export const selectActiveDepth = createSelector(
+  selectMarketState,
+  (state) => state.depth[state.selectedSymbol],
+);

@@ -7,8 +7,16 @@ test('shows TradeDesk shell and Market Watch watchlist', async ({ page }) => {
   await expect(page.getByText('BTC/USDT')).toBeVisible();
 });
 
-test('navigates to Order Placement', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('link', { name: 'Order Placement' }).click();
-  await expect(page.getByRole('heading', { name: 'Order Placement' })).toBeVisible();
+test('places a market order from Order Placement', async ({ page }) => {
+  await page.goto('/order-placement');
+  await page.getByRole('button', { name: 'Place order' }).click();
+  await expect(page.getByRole('heading', { name: 'Recent orders' })).toBeVisible();
+  await expect(page.getByText(/BUY BTC\/USDT/)).toBeVisible();
+});
+
+test('shows order book depth for selected symbol', async ({ page }) => {
+  await page.goto('/order-book');
+  await expect(page.getByRole('heading', { name: 'Order Book' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Bids' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Asks' })).toBeVisible();
 });

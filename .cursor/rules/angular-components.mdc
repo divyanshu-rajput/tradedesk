@@ -1,0 +1,44 @@
+---
+description: Scaffold Angular components with ng generate before writing code
+alwaysApply: true
+---
+
+# Angular component workflow
+
+Always scaffold components with the Angular CLI first. Never hand-create `.component.ts`, `.html`, `.scss`, or `.spec.ts` files.
+
+## Required command
+
+```bash
+npx ng generate component <path>/<name> --flat --defaults
+```
+
+For lazy-loaded route components and the app shell, also pass `--export-default`.
+
+Project defaults (from `angular.json`): standalone, OnPush, scss, `.component.*` filenames.
+
+Examples:
+
+```bash
+# App shell
+npx ng generate component app --flat --export-default --defaults
+
+# Route-level feature component (flat files in feature folder)
+npx ng generate component features/portfolio/portfolio --flat --export-default --defaults
+
+# Child component inside a feature (flat files in same folder)
+npx ng generate component features/market-watch/connection-status --flat --defaults
+```
+
+## After scaffolding only
+
+1. Edit the generated `.component.ts`, `.component.html`, `.component.scss`, and `.component.spec.ts` — no inline `template`/`styles`.
+2. Use BEM class names in HTML/SCSS.
+3. In specs that use NgRx, use `provideMockStore({ initialState: mockAppState })` from `src/app/state/testing/mock-app-state.ts`.
+4. Wire routes/imports only after the component files exist.
+
+## Do not
+
+- Create component files manually without running `ng g c`
+- Use `--skip-tests`, `--inline-template`, or `--inline-style`
+- Overwrite existing components with `--force` unless the user explicitly asks to regenerate

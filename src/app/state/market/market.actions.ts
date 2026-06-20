@@ -10,5 +10,12 @@ export const MarketActions = createActionGroup({
     'Price Updated': props<{ symbol: string; update: Partial<SymbolTick> }>(),
     'Status Changed': props<{ status: ConnectionStatus }>(),
     'Symbol Selected': props<{ symbol: string }>(),
+    'Connect Depth': emptyProps(),
+    'Disconnect Depth': emptyProps(),
+    'Depth Updated': props<{
+      symbol: string;
+      bids: [number, number][];
+      asks: [number, number][];
+    }>(),
   },
 });

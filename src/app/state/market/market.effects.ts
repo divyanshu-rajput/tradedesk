@@ -2,18 +2,29 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { from, timer } from 'rxjs';
-import { catchError, concatMap, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  distinctUntilChanged,
+  map,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
 
+import { DEPTH_FEED } from '../../core/market-data/depth-feed.token';
 import { MARKET_FEED } from '../../core/market-data/market-feed.token';
 import { connectionBackoffMs } from '../../core/market-data/market.constants';
 import { FEED_MODE } from '../../core/market-data/market-feed.providers';
 import { MarketActions } from './market.actions';
+import { selectSelectedSymbol } from './market.selectors';
 
 @Injectable()
 export class MarketEffects {
   private readonly actions$ = inject(Actions);
   private readonly store = inject(Store);
   private readonly feed = inject(MARKET_FEED);
+  private readonly depthFeed = inject(DEPTH_FEED);
   private readonly feedMode = inject(FEED_MODE);
 
   /** Dispatched when the market-watch route loads. */
@@ -81,6 +92,26 @@ export class MarketEffects {
 
             return timer(delayMs).pipe(switchMap(() => caught));
           }),
+        );
+      }),
+    ),
+  );
+
+  /** Depth ladder for order book — switchMap per selected symbol, teardown on disconnectDepth. */
+  depthFeed$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(MarketActions.connectDepth),
+      switchMap(() => {
+        const disconnect$ = this.actions$.pipe(ofType(MarketActions.disconnectDepth));
+
+        return this.store.select(selectSelectedSymbol).pipe(
+          distinctUntilChanged(),
+          switchMap((symbol) =>
+            this.depthFeed
+              .stream$(symbol)
+              .pipe(map(({ bids, asks }) => MarketActions.depthUpdated({ symbol, bids, asks }))),
+          ),
+          takeUntil(disconnect$),
         );
       }),
     ),

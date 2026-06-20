@@ -10,6 +10,7 @@ import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import { provideMarketFeed } from './core/market-data/market-feed.providers';
+import { provideDepthFeed } from './core/market-data/depth-feed.providers';
 import { routes } from './app.routes';
 import {
   MarketEffects,
@@ -39,5 +40,6 @@ export const appConfig: ApplicationConfig = {
       connectInZone: false,
     }),
     provideMarketFeed(),
+    provideDepthFeed(),
   ],
 };

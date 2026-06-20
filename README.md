@@ -76,8 +76,8 @@ npm run format       # Prettier
 
 ## Project Status
 
-**Phase 2 complete** — live/demo market feed, Market Watch table, per-row updates, `priceFlash` directive.
-Next: **Phase 3** — Order Placement form + Order Book.
+**Phase 3 complete** — order placement form with conditional validator, optimistic orders, order book depth.
+Next: **Phase 4** — Portfolio + Charts + Order History.
 
 ## Disclaimer
 

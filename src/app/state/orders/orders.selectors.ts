@@ -8,7 +8,11 @@ export const selectAllOrders = createSelector(selectOrdersState, (state) =>
   state.ids.map((id) => state.entities[id]),
 );
 
+export const selectRecentOrders = createSelector(selectAllOrders, (orders) => orders.slice(0, 5));
+
 export const selectOrdersSubmitting = createSelector(
   selectOrdersState,
   (state) => state.submitting,
 );
+
+export const selectOrdersLastError = createSelector(selectOrdersState, (state) => state.lastError);

@@ -1,6 +1,13 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  isDevMode,
+  signal,
+} from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { isDevMode } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { switchMap } from 'rxjs';
 
@@ -10,60 +17,9 @@ import { selectSymbolData } from '../../state/market/market.selectors';
 
 @Component({
   selector: 'app-watchlist-row',
-  standalone: true,
   imports: [PriceFlashDirective],
-  template: `
-    <tr class="row">
-      <td class="row__symbol">{{ displaySymbol() }}</td>
-      <td class="row__price" [priceFlash]="tick()?.price ?? null">
-        {{ formatPrice(tick()?.price) }}
-      </td>
-      <td
-        class="row__change"
-        [class.row__change--up]="(tick()?.changePct ?? 0) >= 0"
-        [class.row__change--down]="(tick()?.changePct ?? 0) < 0"
-      >
-        {{ formatChange(tick()?.changePct) }}
-      </td>
-      <td class="row__volume">{{ formatVolume(tick()?.volume) }}</td>
-      @if (showRenderCount()) {
-        <td class="row__debug">{{ renderCount() }}</td>
-      }
-    </tr>
-  `,
-  styles: `
-    .row td {
-      padding: 0.625rem 0.75rem;
-      border-bottom: 1px solid #1e293b;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .row__symbol {
-      font-weight: 600;
-      color: #f8fafc;
-    }
-
-    .row__price {
-      color: #e2e8f0;
-    }
-
-    .row__change--up {
-      color: #4ade80;
-    }
-
-    .row__change--down {
-      color: #f87171;
-    }
-
-    .row__volume {
-      color: #94a3b8;
-    }
-
-    .row__debug {
-      color: #64748b;
-      font-size: 0.75rem;
-    }
-  `,
+  templateUrl: './watchlist-row.component.html',
+  styleUrl: './watchlist-row.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WatchlistRowComponent {

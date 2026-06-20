@@ -53,4 +53,11 @@ export const marketReducer = createReducer(
     ...state,
     selectedSymbol: symbol,
   })),
+  on(MarketActions.depthUpdated, (state, { symbol, bids, asks }) => ({
+    ...state,
+    depth: {
+      ...state.depth,
+      [symbol]: { bids, asks },
+    },
+  })),
 );

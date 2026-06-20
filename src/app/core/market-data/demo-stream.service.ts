@@ -5,7 +5,7 @@ import { WATCHLIST_SYMBOLS } from './market.constants';
 import type { MarketFeed, MarketFeedFrame } from './market-feed.token';
 
 /** Seeded base prices for deterministic demo/replay mode. */
-const DEMO_BASE_PRICES: Record<string, number> = {
+export const DEMO_BASE_PRICES: Record<string, number> = {
   BTCUSDT: 67_500,
   ETHUSDT: 3_450,
   BNBUSDT: 590,
