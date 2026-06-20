@@ -11,7 +11,7 @@ import {
 } from '@angular/fire/auth';
 import {
   connectFirestoreEmulator,
-  getFirestore,
+  Firestore,
   initializeFirestore,
   memoryLocalCache,
   persistentLocalCache,
@@ -21,31 +21,32 @@ import {
 import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 
-function connectEmulators(app: FirebaseApp, auth: Auth): void {
-  if (!environment.useEmulators) {
-    return;
+function createAuth(): Auth {
+  const auth = getAuth();
+  if (environment.useEmulators) {
+    connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
   }
+  return auth;
+}
 
-  connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-  connectFirestoreEmulator(getFirestore(app), '127.0.0.1', 8080);
+function createFirestore(app: FirebaseApp): Firestore {
+  const firestore = initializeFirestore(app, {
+    localCache: environment.useEmulators ? memoryLocalCache() : persistentLocalCache(),
+  });
+  if (environment.useEmulators) {
+    connectFirestoreEmulator(firestore, '127.0.0.1', 8080);
+  }
+  return firestore;
 }
 
 export function provideFirebaseProviders(): EnvironmentProviders[] {
   return [
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideFirestore((injector) => {
-      const app = injector.get(FirebaseApp);
-      return initializeFirestore(app, {
-        localCache: environment.useEmulators ? memoryLocalCache() : persistentLocalCache(),
-      });
-    }),
+    provideAuth(() => createAuth()),
+    provideFirestore((injector) => createFirestore(injector.get(FirebaseApp))),
     provideAppInitializer(async () => {
-      const app = inject(FirebaseApp);
       const auth = inject(Auth);
-      connectEmulators(app, auth);
 
-      // Playwright storageState captures sessionStorage but not IndexedDB (Firebase default).
       if (environment.useEmulators) {
         await setPersistence(auth, browserSessionPersistence);
       }

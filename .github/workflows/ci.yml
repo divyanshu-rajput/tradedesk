@@ -84,6 +84,7 @@ jobs:
           java-version: 17
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: npm run build -- --configuration=ci
       - run: npm run e2e
         env:
           CI: true
