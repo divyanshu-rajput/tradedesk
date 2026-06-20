@@ -2,12 +2,12 @@ import { EnvironmentProviders, inject, provideAppInitializer } from '@angular/co
 import { Router } from '@angular/router';
 import { FirebaseApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import {
+  Auth,
   browserSessionPersistence,
   connectAuthEmulator,
   getAuth,
   provideAuth,
   setPersistence,
-  type Auth,
 } from '@angular/fire/auth';
 import {
   connectFirestoreEmulator,
