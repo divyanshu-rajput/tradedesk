@@ -1,15 +1,21 @@
-import { isDevMode } from '@angular/core';
+import { isDevMode, inject, provideAppInitializer } from '@angular/core';
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
+import {
+  provideRouter,
+  Router,
+  withComponentInputBinding,
+  withViewTransitions,
+} from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import { provideFirebaseProviders } from './core/firebase/firebase.providers';
+import { AuthService } from './core/firebase/auth.service';
 import { provideMarketFeed } from './core/market-data/market-feed.providers';
 import { provideDepthFeed } from './core/market-data/depth-feed.providers';
 import { routes } from './app.routes';
@@ -42,6 +48,16 @@ export const appConfig: ApplicationConfig = {
       connectInZone: false,
     }),
     ...provideFirebaseProviders(),
+    provideAppInitializer(async () => {
+      const authService = inject(AuthService);
+      const router = inject(Router);
+      const completed = await authService.handleGoogleRedirectResult();
+
+      if (completed) {
+        authService.markAppSessionActive();
+        await router.navigateByUrl(completed.returnUrl);
+      }
+    }),
     provideMarketFeed(),
     provideDepthFeed(),
   ],

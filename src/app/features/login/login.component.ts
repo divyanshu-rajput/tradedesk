@@ -23,7 +23,16 @@ export default class LoginComponent {
   }
 
   async signInWithGoogle(): Promise<void> {
-    await this.authenticate(() => this.authService.signInWithGoogle());
+    this.signingIn.set(true);
+    this.error.set(null);
+
+    try {
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/market-watch';
+      await this.authService.startGoogleSignInRedirect(returnUrl);
+    } catch (caught) {
+      this.signingIn.set(false);
+      this.error.set(caught instanceof Error ? caught.message : 'Sign-in failed');
+    }
   }
 
   private async authenticate(action: () => Promise<unknown>): Promise<void> {

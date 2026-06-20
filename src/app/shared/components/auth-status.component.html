@@ -1,13 +1,23 @@
 <div class="auth-status">
   <span class="auth-status__label">{{ label() }}</span>
-  @if (isAnonymous()) {
+  @if (user()) {
+    @if (isAnonymous()) {
+      <button
+        class="auth-status__button"
+        type="button"
+        [disabled]="busy()"
+        (click)="upgradeWithGoogle()"
+      >
+        {{ busy() ? 'Connecting…' : 'Sign in with Google' }}
+      </button>
+    }
     <button
-      class="auth-status__button"
+      class="auth-status__button auth-status__button--logout"
       type="button"
-      [disabled]="signingIn()"
-      (click)="upgradeWithGoogle()"
+      [disabled]="busy()"
+      (click)="logOut()"
     >
-      {{ signingIn() ? 'Connecting…' : 'Sign in with Google' }}
+      {{ busy() ? 'Signing out…' : 'Log out' }}
     </button>
   }
   @if (error()) {
