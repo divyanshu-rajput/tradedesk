@@ -1,0 +1,24 @@
+<div class="shell">
+  <header class="shell__header">
+    <div class="shell__brand">
+      <span class="shell__logo">TD</span>
+      <div>
+        <h1 class="shell__title">TradeDesk</h1>
+        <p class="shell__subtitle">Real-time trading terminal</p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="shell__nav" aria-label="Main navigation">
+    <a routerLink="/market-watch" routerLinkActive="is-active">Market Watch</a>
+    <a routerLink="/order-placement" routerLinkActive="is-active">Order Placement</a>
+    <a routerLink="/order-book" routerLinkActive="is-active">Order Book</a>
+    <a routerLink="/portfolio" routerLinkActive="is-active">Portfolio</a>
+    <a routerLink="/charts" routerLinkActive="is-active">Charts</a>
+    <a routerLink="/order-history" routerLinkActive="is-active">Order History</a>
+  </nav>
+
+  <main class="shell__main">
+    <router-outlet />
+  </main>
+</div>

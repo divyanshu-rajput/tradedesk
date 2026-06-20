@@ -1,0 +1,20 @@
+import type { MarketState } from './market/market.reducer';
+import type { OrdersState } from './orders/orders.reducer';
+import type { PortfolioState } from './portfolio/portfolio.reducer';
+import type { UiState } from './ui/ui.reducer';
+
+export interface AppState {
+  market: MarketState;
+  orders: OrdersState;
+  portfolio: PortfolioState;
+  ui: UiState;
+}
+
+export { marketReducer } from './market/market.reducer';
+export { ordersReducer } from './orders/orders.reducer';
+export { portfolioReducer } from './portfolio/portfolio.reducer';
+export { uiReducer } from './ui/ui.reducer';
+
+export { MarketEffects } from './market/market.effects';
+export { OrdersEffects } from './orders/orders.effects';
+export { PortfolioEffects } from './portfolio/portfolio.effects';
