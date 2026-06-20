@@ -122,9 +122,33 @@ jobs:
         with:
           name: dist
           path: dist/
+      - name: Select Firebase auth method
+        id: firebase-auth
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -n "$FIREBASE_TOKEN" ]; then
+            echo "method=token" >> "$GITHUB_OUTPUT"
+          elif [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "method=service-account" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Add FIREBASE_TOKEN (run: firebase login:ci) or FIREBASE_SERVICE_ACCOUNT in GitHub repo secrets."
+            exit 1
+          fi
       - uses: google-github-actions/auth@v2
+        if: steps.firebase-auth.outputs.method == 'service-account'
         with:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-      - name: Verify Firebase credentials
-        run: test -n "$GOOGLE_APPLICATION_CREDENTIALS" && test -f "$GOOGLE_APPLICATION_CREDENTIALS"
-      - run: npx firebase deploy --only hosting,firestore:rules --project tradedesk-e1956 --non-interactive
+      - name: Deploy to Firebase
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -d dist/tradedesk/browser
+          ARGS=(--only hosting,firestore:rules --project tradedesk-e1956 --non-interactive)
+          if [ -n "$FIREBASE_TOKEN" ]; then
+            npx firebase deploy "${ARGS[@]}" --token "$FIREBASE_TOKEN"
+          else
+            npx firebase deploy "${ARGS[@]}"
+          fi

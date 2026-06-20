@@ -1,7 +1,14 @@
 import { EnvironmentProviders, inject, provideAppInitializer } from '@angular/core';
 import { Router } from '@angular/router';
 import { FirebaseApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { connectAuthEmulator, getAuth, provideAuth, Auth } from '@angular/fire/auth';
+import {
+  browserSessionPersistence,
+  connectAuthEmulator,
+  getAuth,
+  provideAuth,
+  setPersistence,
+  type Auth,
+} from '@angular/fire/auth';
 import {
   connectFirestoreEmulator,
   getFirestore,
@@ -34,6 +41,11 @@ export function provideFirebaseProviders(): EnvironmentProviders[] {
       const app = inject(FirebaseApp);
       const auth = inject(Auth);
       connectEmulators(app, auth);
+
+      // Playwright storageState captures sessionStorage but not IndexedDB (Firebase default).
+      if (environment.useEmulators) {
+        await setPersistence(auth, browserSessionPersistence);
+      }
 
       const authService = inject(AuthService);
       const router = inject(Router);

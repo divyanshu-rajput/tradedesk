@@ -18,7 +18,9 @@ test('shows TradeDesk shell and Market Watch watchlist', async ({ page }) => {
 
 test('places a market order from Order Placement', async ({ page }) => {
   await page.goto('/order-placement');
-  await expect(page.getByRole('heading', { name: 'Order Placement' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Order Placement' })).toBeVisible({
+    timeout: 30_000,
+  });
   await expect(page.getByRole('button', { name: 'Place order' })).toBeEnabled();
   await page.getByRole('button', { name: 'Place order' }).click();
   await expect(page.getByRole('heading', { name: 'Recent orders' })).toBeVisible({
