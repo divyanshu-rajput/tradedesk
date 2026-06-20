@@ -58,6 +58,7 @@ npm run build        # production build
 npm test             # Jest unit tests
 npm run test:watch   # Jest watch mode
 npm run e2e          # Playwright end-to-end tests
+npm run lighthouse   # Lighthouse CI budget check (requires npm run build first)
 npm run lint         # ESLint
 npm run format       # Prettier
 ```
@@ -76,8 +77,13 @@ npm run format       # Prettier
 
 ## Project Status
 
-**Phase 5 complete** — Firebase Auth (anonymous + Google) and Firestore persistence for orders and portfolio.
-Next: **Phase 6** — CI/CD and Firebase Hosting deploy.
+**Phase 6 complete** — GitHub Actions CI (lint, test, build, Lighthouse, E2E) and Firebase Hosting deploy on merge to `main`.
+
+### CI/CD setup (one-time manual steps)
+
+1. **GitHub secret** — repo → Settings → Secrets → Actions → add `FIREBASE_SERVICE_ACCOUNT` with the full JSON from Firebase → Project settings → Service accounts → Generate new private key.
+2. **First local deploy** (optional) — `firebase login` then `firebase deploy --only hosting,firestore:rules`.
+3. **PR previews** — open a PR; CI comments a Firebase preview URL when deploy succeeds.
 
 ## Disclaimer
 

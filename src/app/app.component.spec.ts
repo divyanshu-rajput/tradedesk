@@ -1,16 +1,13 @@
-import { provideZonelessChangeDetection, signal } from '@angular/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 
-class MockAuthService {
-  displayLabel = signal('Guest session');
-  isAnonymous = signal(true);
-  signInWithGoogle = jest.fn();
-}
-
-jest.mock('./core/firebase/auth.service', () => ({
-  AuthService: MockAuthService,
-}));
+jest.mock('./core/firebase/auth.service', () => {
+  const { MockAuthService } = jest.requireActual<
+    typeof import('./core/firebase/auth-service.mock')
+  >('./core/firebase/auth-service.mock');
+  return { AuthService: MockAuthService };
+});
 
 import { AuthService } from './core/firebase/auth.service';
 import AppComponent from './app.component';

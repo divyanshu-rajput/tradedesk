@@ -46,8 +46,12 @@ Thumbs.db
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
+.firebase/
 *-firebase-adminsdk-*.json
 service-account*.json
+
+# Lighthouse CI
+.lighthouseci/
 
 # Playwright
 /playwright-report/
